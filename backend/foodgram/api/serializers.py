@@ -1,11 +1,10 @@
+from core.models import CustomUser as User
 from django.db import transaction
 from djoser.serializers import UserCreateSerializer, UserSerializer
-from rest_framework import serializers
-from rest_framework.validators import UniqueTogetherValidator
-
-from core.models import CustomUser as User
 from recipes.models import (Favourites, Ingredient, Recipe, RecipeIngredients,
                             ShoppingCart, Subscribe, Tag)
+from rest_framework import serializers
+from rest_framework.validators import UniqueTogetherValidator
 
 from .fields import Base64ImageField
 
