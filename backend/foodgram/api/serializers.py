@@ -257,7 +257,7 @@ class FavouritesSerializer(serializers.ModelSerializer):
         ).data
 
 
-class SubscribeListSerizliazer(serializers.ModelSerializer):
+class SubscribeListSerialiazer(serializers.ModelSerializer):
     """Сериализатор для получения списка подписок (GET method)."""
     recipes = serializers.SerializerMethodField(read_only=True)
     recipes_count = serializers.SerializerMethodField(read_only=True)
@@ -316,7 +316,7 @@ class SubscribeSerializer(serializers.ModelSerializer):
         return validated_data
 
     def to_representation(self, instance):
-        return SubscribeListSerizliazer(
+        return SubscribeListSerialiazer(
             instance.subscription_on,
             context={'request': self.context.get('request')}
         ).data

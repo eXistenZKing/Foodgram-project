@@ -23,4 +23,11 @@ class CustomUserLimits():
     MAX_LEN_EMAIL = 254
 
 
+class Pagination():
+    """
+    Ограничения для пагинации.
+    """
+    PAGE_SIZE = 6
+
+
 EMPTY_FIELD_MSG = '-пусто-'
