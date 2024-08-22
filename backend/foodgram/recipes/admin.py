@@ -1,8 +1,10 @@
+from django.contrib import admin
+
 from core.constants import EMPTY_FIELD_MSG
 from core.models import CustomUser as User
-from django.contrib import admin
-from models import (Favourites, Ingredient, Recipe, RecipeIngredients,
-                    ShoppingCart, Subscribe, Tag)
+
+from .models import (Favourites, Ingredient, Recipe, RecipeIngredients,
+                     ShoppingCart, Subscribe, Tag)
 
 
 @admin.register(User)
