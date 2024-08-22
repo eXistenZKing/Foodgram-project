@@ -1,12 +1,9 @@
-from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator
 from django.db import models
 
 from core.constants import RecipesLimits
-
-
-User = get_user_model()
+from core.models import CustomUser as User
 
 
 class Ingredient(models.Model):

@@ -1,19 +1,9 @@
 from django.contrib import admin
-from django.contrib.auth import get_user_model
+from models import (Favourites, Ingredient, Recipe, RecipeIngredients,
+                    ShoppingCart, Subscribe, Tag)
 
-from .models import (
-    Ingredient,
-    Tag,
-    Recipe,
-    RecipeIngredients,
-    Subscribe,
-    Favourites,
-    ShoppingCart,
-)
 from core.constants import EMPTY_FIELD_MSG
-
-
-User = get_user_model()
+from core.models import CustomUser as User
 
 
 @admin.register(User)
