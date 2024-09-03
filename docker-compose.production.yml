@@ -15,19 +15,19 @@ services:
     image: dmitriigrnv/foodgram_backend
     env_file: .env
     volumes:
-      - static:/static
-      - media:/media/
+      - static:/backend_static
+      - media:/app/media/
   frontend:
     env_file: .env
     image: dmitriigrnv/foodgram_frontend
-    command: cp -r /app/build/. /static/
+    command: cp -r /app/build/. /frontend_static/
     volumes:
-      - static:/static
+      - static:/frontend_static
   gateway:
     image: dmitriigrnv/foodgram_gateway
     env_file: .env
     ports:
       - 7000:80
     volumes:
-      - static:/static
-      - media:/media
+      - static:/staticfiles/
+      - media:/app/media/
