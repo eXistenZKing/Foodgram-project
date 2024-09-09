@@ -1,4 +1,5 @@
 from django.contrib.auth.models import AbstractUser
+from django.core.validators import validate_email
 from django.db import models
 
 from .constants import CustomUserLimits
@@ -29,6 +30,7 @@ class CustomUser(AbstractUser):
         db_index=True,
         max_length=CustomUserLimits.MAX_LEN_EMAIL,
         verbose_name='Электронная почта',
+        validators=[validate_email,]
     )
     is_subscribed = models.BooleanField(
         default=False,
@@ -41,6 +43,9 @@ class CustomUser(AbstractUser):
         default=None,
         verbose_name='Аватар'
     )
+
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = [first_name, last_name, username, email, password]
 
     class Meta:
         ordering = ('id',)
