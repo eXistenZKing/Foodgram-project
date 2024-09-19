@@ -1,6 +1,6 @@
 from core.models import CustomUser as User
 from django.db import transaction
-from djoser.serializers import UserCreateSerializer, UserSerializer
+from djoser.serializers import UserCreateSerializer
 from recipes.models import (Favourites, Ingredient, Recipe, RecipeIngredients,
                             ShoppingCart, Subscribe, Tag)
 from rest_framework import serializers
@@ -17,8 +17,8 @@ class CreateUserSerializer(UserCreateSerializer):
         extra_kwargs = {'password': {'write_only': True}}
 
 
-class CustomUserSerializer(UserSerializer):
-    """Сериализатор получения (просморта) профиля пользователя."""
+class CustomUserSerializer(serializers.ModelSerializer):
+    """Сериализатор получения (просмотра) профиля пользователя."""
     is_subscribed = serializers.SerializerMethodField()
 
     class Meta:
@@ -30,13 +30,14 @@ class CustomUserSerializer(UserSerializer):
             'username',
             'email',
             'is_subscribed',
+            'avatar',
         )
 
     def get_is_subscribed(self, obj):
         """Проверка наличия подписки на просматриваемого пользователя"""
         user = self.context['request'].user
-        return Subscribe.objects.filter(
-            user=user, author=obj
+        return user.subscriber.filter(
+            author=obj
         ).exists() if user.is_authenticated else False
 
 
@@ -65,7 +66,7 @@ class TagSerializer(serializers.ModelSerializer):
 
 class RecipeIngredientsSerializer(serializers.ModelSerializer):
     """
-    Сериализатор для связной модели RecipeIngredients
+    Сериализатор для связной модели RecipeIngredients,
     списка ингредиентов для рецепта.
     """
     id = serializers.ReadOnlyField(source='ingredient.id')

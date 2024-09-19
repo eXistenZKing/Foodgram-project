@@ -107,7 +107,7 @@ class RecipeIngredients(models.Model):
         verbose_name='Ингредиент'
     )
     amount = models.PositiveSmallIntegerField(
-        default=0,
+        default=1,
         validators=[
             MinValueValidator(
                 RecipesLimits.MIN_AMOUNT_INGREDIENT,
@@ -132,14 +132,14 @@ class Subscribe(models.Model):
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        related_name='subscriptions',
+        related_name='subscriber',
         verbose_name='Пользователь'
     )
     author = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        related_name='subscribers',
-        verbose_name='Пользователь'
+        related_name='subscriptions',
+        verbose_name='Избранный автор'
     )
 
     class Meta:

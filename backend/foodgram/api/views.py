@@ -5,7 +5,6 @@ from core.permissions import IsAuthorOrReadOnly
 from django.db.models import Sum
 from django.http import HttpResponse
 from django_filters.rest_framework import DjangoFilterBackend
-from djoser.views import UserViewSet
 from recipes.models import (Favourites, Ingredient, Recipe, RecipeIngredients,
                             ShoppingCart, Subscribe, Tag)
 from rest_framework import filters, status, viewsets
@@ -22,7 +21,7 @@ from .serializers import (CustomUserAvatarSerializer, CustomUserSerializer,
                           TagSerializer)
 
 
-class CustomUserViewSet(UserViewSet):
+class CustomUserViewSet(viewsets.GenericViewSet):
     """Вьюсет для управления пользователем."""
     queryset = User.objects.all()
     serializer_class = CustomUserSerializer
@@ -219,3 +218,17 @@ class RecipeViewSet(viewsets.ModelViewSet):
         response = HttpResponse(content, content_type='text/plain')
         response['Content-Disposition'] = f'attachment; filename={filename}'
         return response
+
+    @action(
+        detail=True,
+        methods=['GET'],
+        url_name='get_link',
+        url_path='get-link',
+    )
+    def get_link(self, request, pk):
+        get_object_or_404(Recipe, id=pk)
+        link = request.build_absolute_uri(f'/recipes/{pk}/')
+        return Response(
+            {'short-link': link},
+            status=status.HTTP_200_OK
+        )

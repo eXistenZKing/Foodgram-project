@@ -1,11 +1,11 @@
-from django.contrib.auth.models import AbstractUser
-from django.core.validators import validate_email
+from django.contrib.auth.models import AbstractUser, PermissionsMixin
+from django.core.validators import EmailValidator
 from django.db import models
 
 from .constants import CustomUserLimits
 
 
-class CustomUser(AbstractUser):
+class CustomUser(AbstractUser, PermissionsMixin):
     """Кастомная модель пользователя"""
     username = models.CharField(
         unique=True,
@@ -27,14 +27,9 @@ class CustomUser(AbstractUser):
     )
     email = models.EmailField(
         unique=True,
-        db_index=True,
         max_length=CustomUserLimits.MAX_LEN_EMAIL,
         verbose_name='Электронная почта',
-        validators=[validate_email,]
-    )
-    is_subscribed = models.BooleanField(
-        default=False,
-        verbose_name='Подписка на автора',
+        validators=[EmailValidator,]
     )
     avatar = models.ImageField(
         upload_to='users/images/',
@@ -53,4 +48,4 @@ class CustomUser(AbstractUser):
         verbose_name_plural = 'Пользователи'
 
     def __str__(self):
-        return self.first_name
+        return self.username
