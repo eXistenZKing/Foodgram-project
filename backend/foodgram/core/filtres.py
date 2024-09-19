@@ -3,10 +3,10 @@ from recipes.models import Recipe, Tag
 
 
 class RecipeFilter(FilterSet):
-    """Фильтра рецептов по тегам; вкладе 'избранное'; корзине покупок."""
+    """Фильтр рецептов по тегам; вкладе 'избранное'; корзине покупок."""
     tags = filters.ModelMultipleChoiceFilter(
         field_name='tags', to_field_name='slug',
-        lookup_expr='startswith',
+        # lookup_expr='startswith',
         queryset=Tag.objects.all()
     )
     is_favourited = filters.BooleanFilter(method='filter_is_favourited')
