@@ -137,7 +137,7 @@ class AmountIngredientsSerializer(serializers.ModelSerializer):
         return data
 
 
-class RecipeSerializer(serializers.ModelField):
+class RecipeSerializer(serializers.ModelSerializer):
     """Сериализатор рецептов."""
     image = Base64ImageField()
     ingredients = AmountIngredientsSerializer(many=True)
