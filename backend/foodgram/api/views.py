@@ -4,6 +4,7 @@ from core.pagination import PageSizePagination
 from core.permissions import IsAuthorOrReadOnly
 from django.db.models import Sum
 from django.http import HttpResponse
+from django.urls import reverse
 from recipes.models import (Favourites, Ingredient, Recipe, RecipeIngredients,
                             RecipeShortLink, ShoppingCart, Subscribe, Tag)
 from rest_framework import filters, status, viewsets
@@ -225,8 +226,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
     )
     def get_link(self, request, pk):
         recipe = get_object_or_404(Recipe, id=pk)
-        short_link, created = RecipeShortLink.objects.get_or_create(
-            recipe=recipe
+        short_link = request.build_absolute_uri(
+            reverse('recipes:short_link', args=[recipe.pk])
         )
-        serializer = RecipeShortLinkSerializer(short_link)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response({'short-link': short_link}, status=status.HTTP_200_OK)
