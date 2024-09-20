@@ -1,14 +1,13 @@
-import hashlib
-
 from core.filtres import IngredientNameFilter, RecipeFilter
 from core.models import CustomUser as User
 from core.pagination import PageSizePagination
 from core.permissions import IsAuthorOrReadOnly
+from django.conf import settings
 from django.db.models import Sum
 from django.http import HttpResponse
-from django.urls import reverse
+from django.shortcuts import redirect
 from recipes.models import (Favourites, Ingredient, Recipe, RecipeIngredients,
-                            ShoppingCart, Subscribe, Tag)
+                            RecipeShortLink, ShoppingCart, Subscribe, Tag)
 from rest_framework import filters, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.generics import get_object_or_404
@@ -220,16 +219,19 @@ class RecipeViewSet(viewsets.ModelViewSet):
         response['Content-Disposition'] = f'attachment; filename={filename}'
         return response
 
-    @action(
-        detail=True,
-        methods=['GET'],
-        url_path='get-link',
-    )
-    def get_link(self, request, pk=None):
+
+class RedirectShortLinkView(viewsets.View):
+    def get(self, request, short_hash):
+        recipe = get_object_or_404(RecipeShortLink, short_link=short_hash)
+        return redirect(f"{settings.BASE_URL}recipes/{recipe.id}/")
+
+
+class GetShortLinkView(viewsets.APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request, pk):
         recipe = get_object_or_404(Recipe, pk=pk)
-        short_link_code = hashlib.md5(str(recipe.id).encode()).hexdigest()[:6]
-        short_link = (
-            request.build_absolute_uri(reverse('recipe-list'))
-            + f'/s/{short_link_code}'
-        )
-        return Response({'short-link': short_link}, status=status.HTTP_200_OK)
+        recipe = RecipeShortLink.objects.create(recipe=recipe)
+        short_link = recipe.get_short_link()
+        absolute_short_link = f"{settings.BASE_URL}api/s/{short_link}/"
+        return Response({"get_link": absolute_short_link}, status=200)

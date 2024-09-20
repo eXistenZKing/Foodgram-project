@@ -1,3 +1,5 @@
+import hashlib
+
 from core.constants import RecipesLimits
 from core.models import CustomUser as User
 from django.core.exceptions import ValidationError
@@ -210,3 +212,38 @@ class ShoppingCart(models.Model):
                 name='unique recipe in shopping cart'
             )
         ]
+
+
+class RecipeShortLink(models.Model):
+    recipe = models.OneToOneField(
+        Recipe,
+        on_delete=models.CASCADE,
+        related_name='short_link',
+        verbose_name='Рецепт'
+    )
+    short_link = models.CharField(
+        max_length=10,
+        unique=True,
+        blank=True,
+        null=True,
+        verbose_name="Короткая ссылка"
+    )
+
+    def get_short_link(self):
+        return self.short_link
+
+    def generate_short_link(self):
+        hash_object = hashlib.md5(
+            f"{self.recipe.id}{self.recipe.name}".encode()
+        )
+        short_hash = hash_object.hexdigest()[:RecipesLimits.LEN_SHORT_LINK]
+
+        while RecipeShortLink.objects.filter(short_link=short_hash).exists():
+            short_hash = hashlib.md5(
+                short_hash.encode()).hexdigest()[:RecipesLimits.LEN_SHORT_LINK]
+        return short_hash
+
+    def save(self, *args, **kwargs):
+        if not self.short_link:
+            self.short_link = self.generate_short_link()
+        super().save(*args, **kwargs)

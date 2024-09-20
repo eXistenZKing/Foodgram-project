@@ -12,6 +12,7 @@ class RecipesLimits():
     MAX_LEN_TAG = 32
     MAX_LEN_INGREDIENT_NAME = 128
     MAX_LEN_MEASURE_UNIT = 64
+    LEN_SHORT_LINK = 6
 
 
 class CustomUserLimits():
