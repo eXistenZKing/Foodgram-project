@@ -323,7 +323,6 @@ class RecipeShortLinkSerializer(serializers.ModelSerializer):
         fields = ('short_link',)
 
     def get_short_link(self, obj):
-        """Создает полный URL для короткой ссылки."""
         return f"/s/{obj.short_link}"
 
     def to_representation(self, instance):
