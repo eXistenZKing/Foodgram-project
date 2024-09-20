@@ -6,9 +6,10 @@ from django.conf import settings
 from django.db.models import Sum
 from django.http import HttpResponse
 from django.shortcuts import redirect
+from django.views import View
 from recipes.models import (Favourites, Ingredient, Recipe, RecipeIngredients,
                             RecipeShortLink, ShoppingCart, Subscribe, Tag)
-from rest_framework import filters, status, viewsets
+from rest_framework import filters, status, views, viewsets
 from rest_framework.decorators import action
 from rest_framework.generics import get_object_or_404
 from rest_framework.permissions import (AllowAny, IsAuthenticated,
@@ -220,13 +221,13 @@ class RecipeViewSet(viewsets.ModelViewSet):
         return response
 
 
-class RedirectShortLinkView(viewsets.View):
+class RedirectShortLinkView(View):
     def get(self, request, short_hash):
         recipe = get_object_or_404(RecipeShortLink, short_link=short_hash)
         return redirect(f"{settings.BASE_URL}recipes/{recipe.id}/")
 
 
-class GetShortLinkView(viewsets.APIView):
+class GetShortLinkView(views.APIView):
     permission_classes = [AllowAny]
 
     def get(self, request, pk):
