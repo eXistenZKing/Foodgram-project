@@ -4,8 +4,8 @@ from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator
 from django.db import models
 
-from ..core.constants import RecipesLimits
-from ..core.models import CustomUser as User
+from core.constants import RecipesLimits
+from core.models import CustomUser as User
 
 
 class Ingredient(models.Model):

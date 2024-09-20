@@ -3,10 +3,10 @@ from djoser.serializers import UserCreateSerializer
 from rest_framework import serializers
 from rest_framework.validators import UniqueTogetherValidator
 
-from ..core.models import CustomUser as User
-from ..recipes.models import (Favourites, Ingredient, Recipe,
-                              RecipeIngredients, RecipeShortLink, ShoppingCart,
-                              Subscribe, Tag)
+from core.models import CustomUser as User
+from recipes.models import (Favourites, Ingredient, Recipe, RecipeIngredients,
+                            RecipeShortLink, ShoppingCart, Subscribe, Tag)
+
 from .fields import Base64ImageField
 
 

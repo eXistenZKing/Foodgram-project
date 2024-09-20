@@ -7,13 +7,13 @@ from rest_framework.permissions import (AllowAny, IsAuthenticated,
                                         IsAuthenticatedOrReadOnly)
 from rest_framework.response import Response
 
-from ..core.filtres import IngredientNameFilter, RecipeFilter
-from ..core.models import CustomUser as User
-from ..core.pagination import PageSizePagination
-from ..core.permissions import IsAuthorOrReadOnly
-from ..recipes.models import (Favourites, Ingredient, Recipe,
-                              RecipeIngredients, RecipeShortLink, ShoppingCart,
-                              Subscribe, Tag)
+from core.filtres import IngredientNameFilter, RecipeFilter
+from core.models import CustomUser as User
+from core.pagination import PageSizePagination
+from core.permissions import IsAuthorOrReadOnly
+from recipes.models import (Favourites, Ingredient, Recipe, RecipeIngredients,
+                            RecipeShortLink, ShoppingCart, Subscribe, Tag)
+
 from .serializers import (CustomUserAvatarSerializer, CustomUserSerializer,
                           FavouritesSerializer, IngredientSerializer,
                           RecipeListSerializer, RecipeSerializer,
@@ -175,7 +175,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
         """Управление списком избранного."""
         recipe = get_object_or_404(Recipe, id=pk)
         user = get_object_or_404(User, id=request.user.id)
-        shopping_cart = Favourites.objects.filter(
+        favourites = Favourites.objects.filter(
             user=user.id,
             recipe=recipe
         )
@@ -186,8 +186,8 @@ class RecipeViewSet(viewsets.ModelViewSet):
             serializer.is_valid(raise_exception=True)
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
-        if shopping_cart.exists():
-            shopping_cart.delete()
+        if favourites.exists():
+            favourites.delete()
             return Response(status=status.HTTP_204_NO_CONTENT)
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
