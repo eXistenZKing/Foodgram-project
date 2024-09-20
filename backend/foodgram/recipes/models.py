@@ -215,6 +215,7 @@ class ShoppingCart(models.Model):
 
 
 class RecipeShortLink(models.Model):
+    """Модель для хранения сокращённых ссылок на рецепты."""
     recipe = models.OneToOneField(
         Recipe,
         on_delete=models.CASCADE,
@@ -226,13 +227,15 @@ class RecipeShortLink(models.Model):
         unique=True,
         blank=True,
         null=True,
-        verbose_name="Короткая ссылка"
+        verbose_name="Сокращённая ссылка"
     )
 
     def get_short_link(self):
+        """Возвращает сокращённую ссылку на рецепт."""
         return self.short_link
 
     def generate_short_link(self):
+        """Генератор сокращённой ссылки из хэша названия рецепта."""
         hash_object = hashlib.md5(
             f"{self.recipe.id}{self.recipe.name}".encode()
         )
@@ -244,6 +247,7 @@ class RecipeShortLink(models.Model):
         return short_hash
 
     def save(self, *args, **kwargs):
+        """Создание сокращённой ссылки для нового запрашиваемого рецепта."""
         if not self.short_link:
             self.short_link = self.generate_short_link()
         super().save(*args, **kwargs)
