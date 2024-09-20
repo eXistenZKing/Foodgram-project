@@ -1,4 +1,4 @@
-from core.filtres import RecipeFilter
+from core.filtres import RecipeFilter, IngredientNameFilter
 from core.models import CustomUser as User
 from core.pagination import PageSizePagination
 from core.permissions import IsAuthorOrReadOnly
@@ -123,8 +123,7 @@ class IngredientViewSet(viewsets.ReadOnlyModelViewSet):
     """Вьюсет для ингредиентов."""
     queryset = Ingredient.objects.all()
     serializer_class = IngredientSerializer
-    filter_backends = [filters.SearchFilter]
-    search_fields = ['^name']
+    filterset_class = IngredientNameFilter
     pagination_class = None
 
 
