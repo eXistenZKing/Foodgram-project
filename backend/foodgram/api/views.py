@@ -1,11 +1,5 @@
-from core.filtres import IngredientNameFilter, RecipeFilter
-from core.models import CustomUser as User
-from core.pagination import PageSizePagination
-from core.permissions import IsAuthorOrReadOnly
 from django.db.models import Sum
 from django.http import HttpResponse
-from recipes.models import (Favourites, Ingredient, Recipe, RecipeIngredients,
-                            ShoppingCart, Subscribe, Tag)
 from rest_framework import filters, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.generics import get_object_or_404
@@ -13,11 +7,18 @@ from rest_framework.permissions import (AllowAny, IsAuthenticated,
                                         IsAuthenticatedOrReadOnly)
 from rest_framework.response import Response
 
+from ..core.filtres import IngredientNameFilter, RecipeFilter
+from ..core.models import CustomUser as User
+from ..core.pagination import PageSizePagination
+from ..core.permissions import IsAuthorOrReadOnly
+from ..recipes.models import (Favourites, Ingredient, Recipe,
+                              RecipeIngredients, RecipeShortLink, ShoppingCart,
+                              Subscribe, Tag)
 from .serializers import (CustomUserAvatarSerializer, CustomUserSerializer,
                           FavouritesSerializer, IngredientSerializer,
                           RecipeListSerializer, RecipeSerializer,
-                          ShoppingCartSerializer, SubscribeListSerialiazer,
-                          TagSerializer)
+                          RecipeShortLinkSerializer, ShoppingCartSerializer,
+                          SubscribeListSerialiazer, TagSerializer)
 
 
 class CustomUserViewSet(viewsets.GenericViewSet):
@@ -224,9 +225,9 @@ class RecipeViewSet(viewsets.ModelViewSet):
         url_path='get-link',
     )
     def get_link(self, request, pk):
-        get_object_or_404(Recipe, id=pk)
-        link = request.build_absolute_uri(f'/recipes/{pk}/')
-        return Response(
-            {'short-link': link},
-            status=status.HTTP_200_OK
+        recipe = get_object_or_404(Recipe, id=pk)
+        short_link, created = RecipeShortLink.objects.get_or_create(
+            recipe=recipe
         )
+        serializer = RecipeShortLinkSerializer(short_link)
+        return Response(serializer.data, status=status.HTTP_200_OK)

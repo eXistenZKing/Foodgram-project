@@ -1,8 +1,11 @@
-from core.constants import RecipesLimits
-from core.models import CustomUser as User
+import uuid
+
 from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator
 from django.db import models
+
+from ..core.constants import RecipesLimits
+from ..core.models import CustomUser as User
 
 
 class Ingredient(models.Model):
@@ -210,3 +213,27 @@ class ShoppingCart(models.Model):
                 name='unique recipe in shopping cart'
             )
         ]
+
+
+class RecipeShortLink(models.Model):
+    """Модель для короткой ссылки на рецепт."""
+    recipe = models.OneToOneField(
+        Recipe,
+        on_delete=models.CASCADE,
+        related_name='short_link'
+    )
+    short_link = models.CharField(
+        max_length=RecipesLimits.MAX_LEN_SHORT_LINK,
+        unique=True,
+        blank=True,
+        null=True
+    )
+
+    def save(self, *args, **kwargs):
+        if not self.short_link:
+            self.short_link = self.generate_short_link()
+        super().save(*args, **kwargs)
+
+    def generate_short_link(self):
+        short_link = uuid.uuid4().hex[:RecipesLimits.MAX_LEN_SHORT_LINK]
+        return short_link
