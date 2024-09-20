@@ -4,7 +4,7 @@ from core.pagination import PageSizePagination
 from core.permissions import IsAuthorOrReadOnly
 from django.db.models import Sum
 from django.http import HttpResponse
-from django_filters.rest_framework import DjangoFilterBackend
+from django_filters.rest_framework import filters
 from recipes.models import (Favourites, Ingredient, Recipe, RecipeIngredients,
                             ShoppingCart, Subscribe, Tag)
 from rest_framework import filters, status, viewsets
@@ -124,8 +124,7 @@ class IngredientViewSet(viewsets.ReadOnlyModelViewSet):
     """Вьюсет для ингредиентов."""
     queryset = Ingredient.objects.all()
     serializer_class = IngredientSerializer
-    filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['name']
+    filter_backends = [filters.SearchFilter]
     search_fields = ['^name']
     pagination_class = None
 
