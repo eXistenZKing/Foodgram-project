@@ -4,7 +4,6 @@ from core.pagination import PageSizePagination
 from core.permissions import IsAuthorOrReadOnly
 from django.db.models import Sum
 from django.http import HttpResponse
-from django_filters.rest_framework import filters
 from recipes.models import (Favourites, Ingredient, Recipe, RecipeIngredients,
                             ShoppingCart, Subscribe, Tag)
 from rest_framework import filters, status, viewsets
