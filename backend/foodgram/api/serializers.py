@@ -83,7 +83,8 @@ class RecipeListSerializer(serializers.ModelSerializer):
     """Сериализатор для получения спискка рецептов (GET method)."""
     author = CustomUserSerializer(read_only=True)
     image = Base64ImageField()
-    ingredients = RecipeIngredientsSerializer(many=True, read_only=True)
+    ingredients = RecipeIngredientsSerializer(many=True, read_only=True,
+                                              source='recipeingredients')
     tags = TagSerializer(many=True, read_only=True)
     is_favourite = serializers.SerializerMethodField()
     is_in_shoppingcart = serializers.SerializerMethodField()
