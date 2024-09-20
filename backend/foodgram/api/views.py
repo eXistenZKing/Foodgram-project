@@ -6,7 +6,7 @@ from django.db.models import Sum
 from django.http import HttpResponse
 from django.urls import reverse
 from recipes.models import (Favourites, Ingredient, Recipe, RecipeIngredients,
-                            RecipeShortLink, ShoppingCart, Subscribe, Tag)
+                            ShoppingCart, Subscribe, Tag)
 from rest_framework import filters, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.generics import get_object_or_404
@@ -17,8 +17,8 @@ from rest_framework.response import Response
 from .serializers import (CustomUserAvatarSerializer, CustomUserSerializer,
                           FavouritesSerializer, IngredientSerializer,
                           RecipeListSerializer, RecipeSerializer,
-                          RecipeShortLinkSerializer, ShoppingCartSerializer,
-                          SubscribeListSerialiazer, TagSerializer)
+                          ShoppingCartSerializer, SubscribeListSerialiazer,
+                          TagSerializer)
 
 
 class CustomUserViewSet(viewsets.GenericViewSet):
@@ -221,7 +221,6 @@ class RecipeViewSet(viewsets.ModelViewSet):
     @action(
         detail=True,
         methods=['GET'],
-        url_name='get_link',
         url_path='get-link',
     )
     def get_link(self, request, pk):
