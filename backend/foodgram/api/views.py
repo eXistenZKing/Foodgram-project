@@ -1,4 +1,4 @@
-from core.filtres import RecipeFilter, IngredientNameFilter
+from core.filtres import IngredientNameFilter, RecipeFilter
 from core.models import CustomUser as User
 from core.pagination import PageSizePagination
 from core.permissions import IsAuthorOrReadOnly
