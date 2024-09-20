@@ -1,10 +1,11 @@
-from core.models import CustomUser as User
 from django.db import transaction
 from djoser.serializers import UserCreateSerializer
-from recipes.models import (Favourites, Ingredient, Recipe, RecipeIngredients,
-                            RecipeShortLink, ShoppingCart, Subscribe, Tag)
 from rest_framework import serializers
 from rest_framework.validators import UniqueTogetherValidator
+
+from core.models import CustomUser as User
+from recipes.models import (Favourites, Ingredient, Recipe, RecipeIngredients,
+                            ShoppingCart, Subscribe, Tag)
 
 from .fields import Base64ImageField
 
@@ -311,25 +312,6 @@ class SubscribeSerializer(serializers.ModelSerializer):
             instance.subscription_on,
             context={'request': self.context.get('request')}
         ).data
-
-
-class RecipeShortLinkSerializer(serializers.ModelSerializer):
-    """Сериализатор для короткой ссылки на рецепт."""
-
-    short_link = serializers.SerializerMethodField()
-
-    class Meta:
-        model = RecipeShortLink
-        fields = ('short_link',)
-
-    def get_short_link(self, obj):
-        return f"/s/{obj.short_link}"
-
-    def to_representation(self, instance):
-        representation = super().to_representation(instance)
-        return {
-            'short-link': representation['short_link']
-        }
 
 
 class ShoppingCartDownloadSerializer(serializers.ModelSerializer):

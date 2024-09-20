@@ -1,18 +1,21 @@
-from core.filtres import IngredientNameFilter, RecipeFilter
-from core.models import CustomUser as User
-from core.pagination import PageSizePagination
-from core.permissions import IsAuthorOrReadOnly
+import hashlib
+
 from django.db.models import Sum
 from django.http import HttpResponse
 from django.urls import reverse
-from recipes.models import (Favourites, Ingredient, Recipe, RecipeIngredients,
-                            ShoppingCart, Subscribe, Tag)
 from rest_framework import filters, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.generics import get_object_or_404
 from rest_framework.permissions import (AllowAny, IsAuthenticated,
                                         IsAuthenticatedOrReadOnly)
 from rest_framework.response import Response
+
+from core.filtres import IngredientNameFilter, RecipeFilter
+from core.models import CustomUser as User
+from core.pagination import PageSizePagination
+from core.permissions import IsAuthorOrReadOnly
+from recipes.models import (Favourites, Ingredient, Recipe, RecipeIngredients,
+                            ShoppingCart, Subscribe, Tag)
 
 from .serializers import (CustomUserAvatarSerializer, CustomUserSerializer,
                           FavouritesSerializer, IngredientSerializer,
@@ -223,9 +226,11 @@ class RecipeViewSet(viewsets.ModelViewSet):
         methods=['GET'],
         url_path='get-link',
     )
-    def get_link(self, request, pk):
-        recipe = get_object_or_404(Recipe, id=pk)
-        short_link = request.build_absolute_uri(
-            reverse('recipes:short_link', args=[recipe.pk])
+    def get_link(self, request, pk=None):
+        recipe = get_object_or_404(Recipe, pk=pk)
+        short_link_code = hashlib.md5(str(recipe.id).encode()).hexdigest()[:6]
+        short_link = (
+            request.build_absolute_uri(reverse('recipe-list'))
+            + f'/s/{short_link_code}'
         )
         return Response({'short-link': short_link}, status=status.HTTP_200_OK)
