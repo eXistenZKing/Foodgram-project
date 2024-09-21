@@ -223,7 +223,7 @@ class RecipeShortLink(models.Model):
         verbose_name='Рецепт'
     )
     short_link = models.CharField(
-        max_length=RecipesLimits.LEN_SHORT_LINK,
+        max_length=10,
         unique=True,
         blank=True,
         null=True,
