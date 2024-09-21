@@ -33,7 +33,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'core.middleware.IPRestrictMiddleware',
+    # 'core.middleware.IPRestrictMiddleware',
 ]
 
 ROOT_URLCONF = 'foodgram.urls'
