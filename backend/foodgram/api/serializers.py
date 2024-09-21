@@ -105,16 +105,18 @@ class RecipeListSerializer(serializers.ModelSerializer):
         )
 
     def get_is_favourite(self, obj):
-        user = self.context['request'].user
+        user = self.context['request'].user.id
+        recipe = obj.id
         return Favourites.objects.filter(
-            user=user,
-            recipe=obj)
+            user_id=user,
+            recipe_id=recipe).exists()
 
     def get_is_in_shoppingcart(self, obj):
-        user = self.context['request'].user
+        user = self.context['request'].user.id
+        recipe = obj.id
         return ShoppingCart.objects.filter(
-            user=user,
-            recipe=obj)
+            user_id=user,
+            recipe_id=recipe).exists()
 
 
 class AmountIngredientsSerializer(serializers.ModelSerializer):
@@ -184,7 +186,7 @@ class RecipeSerializer(serializers.ModelSerializer):
         return recipe
 
     @transaction.atomic
-    def update(self, instance, validated_data):
+    def edit(self, instance, validated_data):
         ingredients = validated_data.pop('ingredients')
         tags = validated_data.pop('tags')
         recipe = super().update(instance, validated_data)

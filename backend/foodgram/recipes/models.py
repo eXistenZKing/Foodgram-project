@@ -239,7 +239,7 @@ class RecipeShortLink(models.Model):
         return self.short_link
 
     def generate_short_link(self):
-        """Генератор сокращённой ссылки из хэша названия рецепта."""
+        """Генератор сокращённой ссылки."""
         hash_object = hashlib.md5(
             f"{self.recipe.id}{self.recipe.name}".encode()
         )
