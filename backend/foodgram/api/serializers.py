@@ -80,7 +80,7 @@ class RecipeIngredientsSerializer(serializers.ModelSerializer):
 
 
 class RecipeListSerializer(serializers.ModelSerializer):
-    """Сериализатор для получения спискка рецептов (GET method)."""
+    """Сериализатор для получения списка рецептов (GET method)."""
     author = CustomUserSerializer(read_only=True)
     image = Base64ImageField()
     ingredients = RecipeIngredientsSerializer(many=True, read_only=True,
@@ -141,7 +141,7 @@ class RecipeSerializer(serializers.ModelSerializer):
     image = Base64ImageField()
     ingredients = AmountIngredientsSerializer(many=True)
     tags = serializers.SlugRelatedField(
-        slug_field='id', queryset=Tag.objects.all(), many=True, required=True
+        slug_field='slug', queryset=Tag.objects.all(), many=True, required=True
     )
 
     class Meta:
