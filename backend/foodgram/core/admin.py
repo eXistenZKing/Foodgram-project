@@ -1,6 +1,6 @@
 from django.contrib import admin
 from recipes.models import (Favourites, Ingredient, Recipe, RecipeIngredients,
-                            ShoppingCart, Subscribe, Tag)
+                            RecipeShortLink, ShoppingCart, Subscribe, Tag)
 
 from .constants import EMPTY_FIELD_MSG
 from .models import CustomUser as User
@@ -35,3 +35,4 @@ admin.site.register(RecipeIngredients)
 admin.site.register(Subscribe)
 admin.site.register(Favourites)
 admin.site.register(ShoppingCart)
+admin.site.register(RecipeShortLink)

@@ -230,6 +230,10 @@ class RecipeShortLink(models.Model):
         verbose_name="Сокращённая ссылка"
     )
 
+    class Meta:
+        verbose_name = 'сокращённая ссылка'
+        verbose_name_plural = 'Сокращённые ссылки'
+
     def get_short_link(self):
         """Возвращает сокращённую ссылку на рецепт."""
         return self.short_link
