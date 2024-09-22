@@ -96,7 +96,7 @@ class RecipeIngredientsSerializer(serializers.ModelSerializer):
 
 class RecipeSerializer(serializers.ModelSerializer):
     """Сериализатор рецептов."""
-    author = CustomUserSerializer()
+    author = CustomUserSerializer(read_only=True, source='author')
     image = Base64ImageField(required=False, allow_null=True)
     ingredients = RecipeIngredientsSerializer(many=True, read_only=True,
                                               source='recipeingredients')
