@@ -96,7 +96,7 @@ class RecipeIngredientsSerializer(serializers.ModelSerializer):
 
 class RecipeSerializer(serializers.ModelSerializer):
     """Сериализатор рецептов."""
-    author = CustomUserSerializer(read_only=True, source='recipes')
+    author = serializers.SerializerMethodField()
     image = Base64ImageField(required=False, allow_null=True)
     ingredients = RecipeIngredientsSerializer(many=True, read_only=True,
                                               source='recipeingredients')
@@ -118,6 +118,10 @@ class RecipeSerializer(serializers.ModelSerializer):
             'text',
             'cooking_time'
         ]
+
+    def get_author(self, obj):
+        serializer = CustomUserSerializer(obj.author)
+        return serializer.data
 
     def get_is_favourite(self, obj):
         user = self.context['request'].user.id
