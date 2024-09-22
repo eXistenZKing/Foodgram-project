@@ -165,7 +165,7 @@ class RecipeSerializer(serializers.ModelSerializer):
         )
 
     @transaction.atomic
-    def create(self, validated_data):
+    def patch(self, validated_data):
         ingredients = self.context['request'].data.get('ingredients', [])
         tags = self.context['request'].data.get('tags', [])
         recipe = Recipe.objects.create(
