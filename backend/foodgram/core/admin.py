@@ -1,5 +1,5 @@
 from django.contrib import admin
-from recipes.models import (Favourites, Ingredient, Recipe, RecipeIngredients,
+from recipes.models import (Favorites, Ingredient, Recipe, RecipeIngredients,
                             RecipeShortLink, ShoppingCart, Subscribe, Tag)
 
 from .constants import EMPTY_FIELD_MSG
@@ -14,14 +14,14 @@ class UserAdmin(admin.ModelAdmin):
 
 @admin.register(Recipe)
 class RecipeAdmin(admin.ModelAdmin):
-    list_display = ['name', 'author', 'get_favourite_count',]
+    list_display = ['name', 'author', 'get_favorite_count',]
     search_fields = ['author__first_name', 'name',]
     list_filter = ['tags',]
 
     empty_value_display = EMPTY_FIELD_MSG
 
-    def get_favourite_count(self, obj):
-        return obj.favourite_by_users.count()
+    def get_favorite_count(self, obj):
+        return obj.favorite_by_users.count()
 
 
 @admin.register(Ingredient)
@@ -33,6 +33,6 @@ class IngredientAdmin(admin.ModelAdmin):
 admin.site.register(Tag)
 admin.site.register(RecipeIngredients)
 admin.site.register(Subscribe)
-admin.site.register(Favourites)
+admin.site.register(Favorites)
 admin.site.register(ShoppingCart)
 admin.site.register(RecipeShortLink)

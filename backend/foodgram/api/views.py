@@ -7,7 +7,7 @@ from django.db.models import Sum
 from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.views import View
-from recipes.models import (Favourites, Ingredient, Recipe, RecipeIngredients,
+from recipes.models import (Favorites, Ingredient, Recipe, RecipeIngredients,
                             RecipeShortLink, ShoppingCart, Subscribe, Tag)
 from rest_framework import status, views, viewsets
 from rest_framework.decorators import action
@@ -17,7 +17,7 @@ from rest_framework.permissions import (AllowAny, IsAuthenticated,
 from rest_framework.response import Response
 
 from .serializers import (CustomUserAvatarSerializer, CustomUserSerializer,
-                          FavouritesSerializer, IngredientSerializer,
+                          FavoritesSerializer, IngredientSerializer,
                           RecipeSerializer, ShoppingCartSerializer,
                           SubscribeSerialiazer, TagSerializer)
 
@@ -70,7 +70,6 @@ class CustomUserViewSet(viewsets.GenericViewSet):
         methods=['POST', 'DELETE'],
         permission_classes=[IsAuthenticated],
         pagination_class=PageSizePagination,
-        serializer_class=SubscribeSerialiazer,
     )
     def subscribe(self, request, pk=None):
         """Управление подпиской на автора рецептов."""
@@ -103,7 +102,7 @@ class CustomUserViewSet(viewsets.GenericViewSet):
     )
     def subscriptions(self, request):
         """Получение списка подписок."""
-        queryset = User.objects.filter(subscribers__user=request.user)
+        queryset = User.objects.filter(subscriber__user=request.user)
         pages = self.paginate_queryset(queryset)
         serializer = SubscribeSerialiazer(
             pages, many=True,
@@ -169,19 +168,19 @@ class RecipeViewSet(viewsets.ModelViewSet):
         """Управление списком избранного."""
         recipe = get_object_or_404(Recipe, id=pk)
         user = get_object_or_404(User, id=request.user.id)
-        favourites = Favourites.objects.filter(
+        favorites = Favorites.objects.filter(
             user=user.id,
             recipe=recipe
         )
         if request.method == 'POST':
-            serializer = FavouritesSerializer(
+            serializer = FavoritesSerializer(
                 data={'user': user.id, 'recipe': recipe.id}
             )
             serializer.is_valid(raise_exception=True)
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
-        if favourites.exists():
-            favourites.delete()
+        if favorites.exists():
+            favorites.delete()
             return Response(status=status.HTTP_204_NO_CONTENT)
         return Response(status=status.HTTP_400_BAD_REQUEST)
 

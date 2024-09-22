@@ -162,18 +162,18 @@ class Subscribe(models.Model):
         super().save(*args, **kwargs)
 
 
-class Favourites(models.Model):
+class Favorites(models.Model):
     """Модель для избранных рецептов."""
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        related_name='favourites',
+        related_name='favorites',
         verbose_name='Пользователь'
     )
     recipe = models.ForeignKey(
         Recipe,
         on_delete=models.CASCADE,
-        related_name='favourite_by_users',
+        related_name='favorite_by_users',
         verbose_name='Избранный рецепт'
     )
 
@@ -183,7 +183,7 @@ class Favourites(models.Model):
         constraints = [
             models.UniqueConstraint(
                 fields=('user', 'recipe'),
-                name='unique recipes in favourites'
+                name='unique recipes in favorites'
             )
         ]
 
