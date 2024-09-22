@@ -94,6 +94,24 @@ class RecipeIngredientsSerializer(serializers.ModelSerializer):
         fields = ['id', 'name', 'amount', 'measurement_unit']
 
 
+# class AmountIngredientsSerializer(serializers.ModelSerializer):
+#     """Сериализатор количества ингредиента."""
+#     id = serializers.PrimaryKeyRelatedField(
+# queryset=Ingredient.objects.all())
+#     amount = serializers.IntegerField()
+
+#     class Meta:
+#         model = RecipeIngredients
+#         fields = ("id", "amount")
+
+#     def validate(self, data):
+#         if data['amount'] < 1:
+#             raise serializers.ValidationError(
+#                 'Мин. количество ингредиента 1 у.е.'
+#             )
+#         return data
+
+
 class RecipeSerializer(serializers.ModelSerializer):
     """Сериализатор рецептов."""
     author = CustomUserSerializer(read_only=True)
@@ -139,7 +157,7 @@ class RecipeSerializer(serializers.ModelSerializer):
             [
                 RecipeIngredients(
                     recipe=recipe,
-                    ingredient=ingredient,
+                    ingredient_id=ingredient['id'],
                     amount=ingredient['amount'],
                 )
                 for ingredient in ingredients
