@@ -243,11 +243,16 @@ class ShortRecipeSerializer(serializers.ModelSerializer):
 
 class FavoritesSerializer(serializers.ModelSerializer):
     """Сериализатор для списка 'Избранное'."""
-    recipe = RecipeSerializer()
-
     class Meta:
         model = Favorites
         fields = ['user', 'recipe']
+
+    def to_representation(self, instance):
+        """Представление данных для формата JSON в списке 'Избранное'."""
+        return ShortRecipeSerializer(
+            instance.recipe,
+            context={'request': self.context.get('request')}
+        ).data
 
 
 class SubscribeSerialiazer(serializers.ModelSerializer):
@@ -300,15 +305,6 @@ class SubscribeSerialiazer(serializers.ModelSerializer):
             raise serializers.ValidationError(
                 f'Пользователь с username {author} не существует.')
         return validated_data
-
-
-# class ShoppingCartDownloadSerializer(serializers.ModelSerializer):
-#     """Сериализатор для скачивания списка покупок."""
-#     shopping_cart = serializers.FileField()
-
-#     class Meta:
-#         model = ShoppingCart
-#         fields = ('user', 'recipe', 'shopping_cart')
 
 
 class ShoppingCartSerializer(serializers.ModelSerializer):

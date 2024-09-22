@@ -5,7 +5,7 @@ from recipes.models import Ingredient, Recipe, Tag
 class RecipeFilter(FilterSet):
     """Фильтр рецептов по тегам; вкладе 'избранное'; корзине покупок."""
     tags = filters.ModelMultipleChoiceFilter(
-        field_name='tags', to_field_name='id',
+        field_name='tags__slug', to_field_name='slug',
         queryset=Tag.objects.all()
     )
     is_favorited = filters.BooleanFilter(method='filter_is_favorited')
