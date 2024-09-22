@@ -174,7 +174,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
         )
         if request.method == 'POST':
             serializer = FavoritesSerializer(
-                data={'user': user.id, 'recipe': recipe.id}
+                data={'user': user.id, 'recipe': recipe}
             )
             serializer.is_valid(raise_exception=True)
             serializer.save()

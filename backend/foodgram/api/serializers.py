@@ -247,13 +247,14 @@ class FavoritesSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Favorites
-        fields = ['id', 'recipe']
+        fields = ['user', 'recipe']
 
 
 class SubscribeSerialiazer(serializers.ModelSerializer):
     """Сериализатор модели подписки на автора."""
     recipes = serializers.SerializerMethodField(read_only=True)
     recipes_count = serializers.SerializerMethodField(read_only=True)
+    is_subscribed = serializers.SerializerMethodField()
 
     class Meta:
         model = User
