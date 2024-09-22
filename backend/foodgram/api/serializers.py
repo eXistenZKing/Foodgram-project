@@ -1,7 +1,7 @@
 from core.models import CustomUser as User
 from django.db import transaction
 from djoser.serializers import UserCreateSerializer
-from recipes.models import (Favourites, Ingredient, Recipe, RecipeIngredients,
+from recipes.models import (Favorites, Ingredient, Recipe, RecipeIngredients,
                             ShoppingCart, Subscribe, Tag)
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
@@ -119,7 +119,7 @@ class RecipeSerializer(serializers.ModelSerializer):
     ingredients = RecipeIngredientsSerializer(many=True, read_only=True,
                                               source='recipeingredients')
     tags = TagSerializer(many=True, read_only=True)
-    is_favourite = serializers.SerializerMethodField()
+    is_favorite = serializers.SerializerMethodField()
     is_in_shoppingcart = serializers.SerializerMethodField()
 
     class Meta:
@@ -129,7 +129,7 @@ class RecipeSerializer(serializers.ModelSerializer):
             'tags',
             'author',
             'ingredients',
-            'is_favourite',
+            'is_favorite',
             'is_in_shoppingcart',
             'name',
             'image',
@@ -137,10 +137,10 @@ class RecipeSerializer(serializers.ModelSerializer):
             'cooking_time'
         ]
 
-    def get_is_favourite(self, obj):
+    def get_is_favorite(self, obj):
         user = self.context['request'].user.id
         recipe = obj.id
-        return Favourites.objects.filter(
+        return Favorites.objects.filter(
             user_id=user,
             recipe_id=recipe).exists()
 
@@ -241,12 +241,12 @@ class ShortRecipeSerializer(serializers.ModelSerializer):
         fields = ['id', 'name', 'image', 'cooking_time']
 
 
-class FavouritesSerializer(serializers.ModelSerializer):
+class FavoritesSerializer(serializers.ModelSerializer):
     """Сериализатор для списка 'Избранное'."""
     recipe = RecipeSerializer()
 
     class Meta:
-        model = Favourites
+        model = Favorites
         fields = ['id', 'recipe']
 
 
