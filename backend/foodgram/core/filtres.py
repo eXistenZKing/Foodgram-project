@@ -5,8 +5,7 @@ from recipes.models import Ingredient, Recipe, Tag
 class RecipeFilter(FilterSet):
     """Фильтр рецептов по тегам; вкладе 'избранное'; корзине покупок."""
     tags = filters.ModelMultipleChoiceFilter(
-        field_name='tags', to_field_name='slug',
-        # lookup_expr='startswith',
+        field_name='tags', to_field_name='id',
         queryset=Tag.objects.all()
     )
     is_favourited = filters.BooleanFilter(method='filter_is_favourited')
@@ -33,7 +32,7 @@ class RecipeFilter(FilterSet):
 
 class IngredientNameFilter(FilterSet):
     """Фильтр для поиска ингредиентов по названию."""
-    name = filters.CharFilter(field_name='name', lookup_expr='startswith')
+    name = filters.CharFilter(field_name='name', lookup_expr='istartswith ')
 
     class Meta:
         model = Ingredient

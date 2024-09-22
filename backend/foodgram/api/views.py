@@ -9,7 +9,7 @@ from django.shortcuts import redirect
 from django.views import View
 from recipes.models import (Favourites, Ingredient, Recipe, RecipeIngredients,
                             RecipeShortLink, ShoppingCart, Subscribe, Tag)
-from rest_framework import filters, status, views, viewsets
+from rest_framework import status, views, viewsets
 from rest_framework.decorators import action
 from rest_framework.generics import get_object_or_404
 from rest_framework.permissions import (AllowAny, IsAuthenticated,
@@ -23,15 +23,13 @@ from .serializers import (CustomUserAvatarSerializer, CustomUserSerializer,
 
 
 class CustomUserViewSet(viewsets.GenericViewSet):
-    """Вьюсет для управления пользователем."""
+    """Вьюсет для управления пользователями."""
     queryset = User.objects.all()
-    serializer_class = CustomUserSerializer
     permission_classes = [AllowAny]
-    filter_backends = [filters.SearchFilter]
-    search_fields = ['username']
+    serializer_class = CustomUserSerializer
 
     @action(
-        detail=False,
+        detail=True,
         methods=['GET'],
         permission_classes=[IsAuthenticated],
         url_path='me'
@@ -43,7 +41,7 @@ class CustomUserViewSet(viewsets.GenericViewSet):
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
     @action(
-        detail=False,
+        detail=True,
         methods=['PUT', 'DELETE'],
         permission_classes=[IsAuthenticated],
         url_path='me/avatar',
@@ -71,14 +69,14 @@ class CustomUserViewSet(viewsets.GenericViewSet):
         detail=True,
         methods=['POST', 'DELETE'],
         permission_classes=[IsAuthenticated],
+        pagination_class=PageSizePagination,
         serializer_class=SubscribeSerialiazer,
-        pagination_class=PageSizePagination
     )
     def subscribe(self, request, pk=None):
         """Управление подпиской на автора рецептов."""
         user = request.user
         author = get_object_or_404(User, id=pk)
-        sibscribe = Subscribe.objects.filter(
+        subscribe = Subscribe.objects.filter(
             user=user.id,
             author=author.id
         )
@@ -92,8 +90,8 @@ class CustomUserViewSet(viewsets.GenericViewSet):
             serializer.is_valid(raise_exception=True)
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
-        if sibscribe.exists():
-            sibscribe.delete()
+        if subscribe.exists():
+            subscribe.delete()
             return Response(status=status.HTTP_204_NO_CONTENT)
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
@@ -132,17 +130,17 @@ class IngredientViewSet(viewsets.ReadOnlyModelViewSet):
 class RecipeViewSet(viewsets.ModelViewSet):
     """Вьюсет для управления рецептами."""
     queryset = Recipe.objects.all()
+    serializer_class = RecipeSerializer
     pagination_class = PageSizePagination
     filterset_class = RecipeFilter
     permission_classes = [IsAuthorOrReadOnly, IsAuthenticatedOrReadOnly]
-    serializer_class = RecipeSerializer
 
     @action(
         detail=True,
         methods=['POST', 'DELETE'],
         permission_classes=[IsAuthenticated]
     )
-    def shopping_cart(self, request, pk):
+    def shopping_cart(self, request, pk=None):
         """Управление списком покупок."""
         recipe = get_object_or_404(Recipe, id=pk)
         user = get_object_or_404(User, id=request.user.id)
@@ -167,7 +165,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
         methods=['POST', 'DELETE'],
         permission_classes=[IsAuthenticated]
     )
-    def favourites(self, request, pk):
+    def favorite(self, request, pk=None):
         """Управление списком избранного."""
         recipe = get_object_or_404(Recipe, id=pk)
         user = get_object_or_404(User, id=request.user.id)
@@ -191,13 +189,14 @@ class RecipeViewSet(viewsets.ModelViewSet):
         detail=False,
         methods=['GET'],
         pagination_class=None,
+        permission_classes=[IsAuthenticated]
     )
     def download_shopping_cart(self, request):
         """Скачивание корзины покупок."""
         user = request.user
         list_recipes = (
             RecipeIngredients.objects.filter(
-                recipe__recipe_download__user=user)
+                recipe__shopping_cart__user=user)
             .values('ingredient__name', 'ingredient__measurement_unit')
             .annotate(amount=Sum('amount'))
         )
