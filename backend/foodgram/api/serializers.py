@@ -139,7 +139,7 @@ class RecipeSerializer(serializers.ModelSerializer):
             [
                 RecipeIngredients(
                     recipe=recipe,
-                    ingredient=ingredient['id'],
+                    ingredient=ingredient,
                     amount=ingredient['amount'],
                 )
                 for ingredient in ingredients
@@ -150,9 +150,7 @@ class RecipeSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         ingredients = self.context['request'].data.get('ingredients', [])
         tags = self.context['request'].data.get('tags', [])
-        recipe = Recipe.objects.create(
-            author=self.context['request'].user, **validated_data
-        )
+        recipe = Recipe.objects.create(**validated_data)
         self.create_ingredients_list(ingredients, recipe)
         recipe.tags.set(tags)
         return recipe

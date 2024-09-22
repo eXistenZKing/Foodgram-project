@@ -135,12 +135,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
     pagination_class = PageSizePagination
     filterset_class = RecipeFilter
     permission_classes = [IsAuthorOrReadOnly, IsAuthenticatedOrReadOnly]
-
-    def get_serializer_class(self):
-        """Определяет класс сериализатора взависимости от метода запроса."""
-        if self.action in ['list', 'retrieve']:
-            return RecipeSerializer
-        return RecipeSerializer
+    serializer_class = RecipeSerializer
 
     @action(
         detail=True,
