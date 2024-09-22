@@ -213,6 +213,20 @@ class RecipeViewSet(viewsets.ModelViewSet):
         response['Content-Disposition'] = f'attachment; filename={filename}'
         return response
 
+    @action(
+        detail=True,
+        methods=['GET'],
+        permission_classes=[AllowAny],
+        url_path='get-link'
+
+    )
+    def get_link(self, request, pk=None):
+        recipe = get_object_or_404(Recipe, id=pk)
+        recipe, _ = RecipeShortLink.objects.get_or_create(recipe=recipe)
+        short_link = recipe.get_short_link()
+        absolute_short_link = f"{settings.BASE_URL}api/s/{short_link}/"
+        return Response({"get_link": absolute_short_link}, status=200)
+
 
 class RedirectShortLinkView(View):
     def get(self, request, short_hash):
@@ -220,12 +234,12 @@ class RedirectShortLinkView(View):
         return redirect(f"{settings.BASE_URL}recipes/{recipe.recipe.id}/")
 
 
-class GetShortLinkView(views.APIView):
-    permission_classes = [AllowAny]
+# class GetShortLinkView(views.APIView):
+#     permission_classes = [AllowAny]
 
-    def get(self, request, pk):
-        recipe = get_object_or_404(Recipe, id=pk)
-        recipe, _ = RecipeShortLink.objects.get_or_create(recipe=recipe)
-        short_link = recipe.get_short_link()
-        absolute_short_link = f"{settings.BASE_URL}api/s/{short_link}/"
-        return Response({"get_link": absolute_short_link}, status=200)
+#     def get(self, request, pk):
+#         recipe = get_object_or_404(Recipe, id=pk)
+#         recipe, _ = RecipeShortLink.objects.get_or_create(recipe=recipe)
+#         short_link = recipe.get_short_link()
+#         absolute_short_link = f"{settings.BASE_URL}api/s/{short_link}/"
+#         return Response({"get_link": absolute_short_link}, status=200)
