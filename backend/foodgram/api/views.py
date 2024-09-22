@@ -70,6 +70,7 @@ class CustomUserViewSet(viewsets.GenericViewSet):
         methods=['POST', 'DELETE'],
         permission_classes=[IsAuthenticated],
         pagination_class=PageSizePagination,
+        serializer_class=SubscribeSerialiazer
     )
     def subscribe(self, request, pk=None):
         """Управление подпиской на автора рецептов."""
