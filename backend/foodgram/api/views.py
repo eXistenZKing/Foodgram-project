@@ -18,9 +18,8 @@ from rest_framework.response import Response
 
 from .serializers import (CustomUserAvatarSerializer, CustomUserSerializer,
                           FavouritesSerializer, IngredientSerializer,
-                          RecipeListSerializer, RecipeSerializer,
-                          ShoppingCartSerializer, SubscribeListSerialiazer,
-                          TagSerializer)
+                          RecipeSerializer, ShoppingCartSerializer,
+                          SubscribeSerialiazer, TagSerializer)
 
 
 class CustomUserViewSet(viewsets.GenericViewSet):
@@ -72,7 +71,7 @@ class CustomUserViewSet(viewsets.GenericViewSet):
         detail=True,
         methods=['POST', 'DELETE'],
         permission_classes=[IsAuthenticated],
-        serializer_class=SubscribeListSerialiazer,
+        serializer_class=SubscribeSerialiazer,
         pagination_class=PageSizePagination
     )
     def subscribe(self, request, pk=None):
@@ -84,7 +83,7 @@ class CustomUserViewSet(viewsets.GenericViewSet):
             author=author.id
         )
         if request.method == 'POST':
-            serializer = SubscribeListSerialiazer(
+            serializer = SubscribeSerialiazer(
                 data={
                     'user': user.id,
                     'author': author.id
@@ -108,7 +107,7 @@ class CustomUserViewSet(viewsets.GenericViewSet):
         """Получение списка подписок."""
         queryset = User.objects.filter(subscribers__user=request.user)
         pages = self.paginate_queryset(queryset)
-        serializer = SubscribeListSerialiazer(
+        serializer = SubscribeSerialiazer(
             pages, many=True,
             context={'request': request}
         )
@@ -140,7 +139,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
     def get_serializer_class(self):
         """Определяет класс сериализатора взависимости от метода запроса."""
         if self.action in ['list', 'retrieve']:
-            return RecipeListSerializer
+            return RecipeSerializer
         return RecipeSerializer
 
     @action(
