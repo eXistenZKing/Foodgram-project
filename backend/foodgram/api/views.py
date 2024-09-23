@@ -225,7 +225,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
         recipe, _ = RecipeShortLink.objects.get_or_create(recipe=recipe)
         short_link = recipe.get_short_link()
         absolute_short_link = f"{settings.BASE_URL}api/s/{short_link}/"
-        return Response(request, {"get_link": absolute_short_link}, status=200)
+        return Response({"short-link": absolute_short_link}, status=200)
 
 
 class RedirectShortLinkView(View):
