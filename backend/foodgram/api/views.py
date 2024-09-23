@@ -134,7 +134,6 @@ class RecipeViewSet(viewsets.ModelViewSet):
     pagination_class = PageSizePagination
     filterset_class = RecipeFilter
     permission_classes = [IsAuthorOrReadOnly, IsAuthenticatedOrReadOnly]
-    http_method_names = ('get', 'post', 'patch', 'delete')
 
     @action(
         detail=True,
