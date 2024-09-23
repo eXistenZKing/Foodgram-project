@@ -135,19 +135,17 @@ class RecipeViewSet(viewsets.ModelViewSet):
     filterset_class = RecipeFilter
     permission_classes = [IsAuthorOrReadOnly, IsAuthenticatedOrReadOnly]
 
-    # @action(
-    #     detail=True,
-    #     methods=['PUT'],
-    #     permission_classes=[IsAuthorOrReadOnly],
-    #     url_path='edit'
-    # )
-    # def update(self, request, pk=None):
-    #     recipe = get_object_or_404(Recipe, id=pk)
-    #     RecipeSerializer.update()
-    #     serializer = self.get_serializer(recipe, data=request.data)
-    #     serializer.is_valid(raise_exception=True)
-    #     serializer.save()
-    #     return Response(serializer.data, status=status.HTTP_201_CREATED)
+    @action(
+        detail=True,
+        permission_classes=[IsAuthorOrReadOnly],
+    )
+    def edit(self, request, pk=None):
+        recipe = get_object_or_404(Recipe, id=pk)
+        RecipeSerializer.update()
+        serializer = self.get_serializer(recipe, data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     @action(
         detail=True,
