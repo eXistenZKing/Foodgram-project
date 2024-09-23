@@ -134,18 +134,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
     pagination_class = PageSizePagination
     filterset_class = RecipeFilter
     permission_classes = [IsAuthorOrReadOnly, IsAuthenticatedOrReadOnly]
-
-    @action(
-        detail=True,
-        permission_classes=[IsAuthorOrReadOnly],
-    )
-    def edit(self, request, pk=None):
-        recipe = get_object_or_404(Recipe, id=pk)
-        RecipeSerializer.update()
-        serializer = self.get_serializer(recipe, data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    http_method_names = ('get', 'post', 'patch', 'delete')
 
     @action(
         detail=True,
