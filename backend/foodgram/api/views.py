@@ -224,7 +224,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
         recipe = get_object_or_404(Recipe, id=pk)
         recipe, _ = RecipeShortLink.objects.get_or_create(recipe=recipe)
         short_link = recipe.get_short_link()
-        absolute_short_link = f"{settings.BASE_URL}api/s/{short_link}/"
+        absolute_short_link = f"{settings.BASE_URL}/api/s/{short_link}/"
         return Response({"short-link": absolute_short_link}, status=200)
 
 
