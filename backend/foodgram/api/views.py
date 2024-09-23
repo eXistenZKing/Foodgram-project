@@ -231,7 +231,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
 class RedirectShortLinkView(View):
     def get(self, request, short_hash):
         recipe = get_object_or_404(RecipeShortLink, short_link=short_hash)
-        return redirect(f"{settings.BASE_URL}recipes/{recipe.recipe.id}/")
+        return redirect(f"{settings.BASE_URL}/recipes/{recipe.recipe.id}/")
 
 
 # class GetShortLinkView(views.APIView):

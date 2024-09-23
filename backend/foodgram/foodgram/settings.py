@@ -8,7 +8,7 @@ SECRET_KEY = os.getenv('SECRET_KEY', '')
 DEBUG = os.getenv('DEBUG', False)
 
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split()
-BASE_URL = os.getenv("BASE_URL", "http://127.0.0.1:7000/")
+BASE_URL = os.getenv("BASE_URL", "http://127.0.0.1:7000")
 
 INSTALLED_APPS = [
     'django.contrib.admin',
