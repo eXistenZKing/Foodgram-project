@@ -185,17 +185,19 @@ class RecipeSerializer(serializers.ModelSerializer):
         # instance.save()
         # return instance
 
-        ingredients = self.context['request'].data.get('ingredients', [])
+        # ingredients = self.context['request'].data.get('ingredients', [])
         tags = self.context['request'].data.get('tags', [])
 
         image = validated_data.pop('image', None)
-        if validated_data['image']:
+        if image:
             instance.image = image
 
         instance = super().update(instance, validated_data)
         instance.tags.set(tags)
-        instance.recipeingredients.all().delete()
-        self.create_ingredients_list(instance, ingredients)
+        # instance.recipeingredients.all().delete()
+        instance.ingredients = validated_data.get(self.create_ingredients_list(
+            instance.ingredients, instance), instance.ingredients
+        )
         return instance
 
     def to_representation(self, instance):
