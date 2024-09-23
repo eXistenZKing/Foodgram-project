@@ -177,12 +177,11 @@ class RecipeSerializer(serializers.ModelSerializer):
 
     @transaction.atomic
     def update(self, instance, validated_data):
-        recipe = Recipe.objects.filter(id=instance.id)
-        instance.ingredients = validated_data.get(self.create_ingredients_list(
-            instance.ingredients, recipe), instance.ingredients
-        )
         instance.tags = validated_data.get('tags', instance.tags)
         instance.image = validated_data.get('image', instance.image)
+        instance.ingredients = validated_data.get(self.create_ingredients_list(
+            instance.ingredients, instance), instance.ingredients
+        )
         instance.save()
         return instance
 
