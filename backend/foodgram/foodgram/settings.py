@@ -9,6 +9,7 @@ DEBUG = os.getenv('DEBUG', False)
 
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split()
 BASE_URL = os.getenv("BASE_URL", "http://127.0.0.1:7000")
+CSRF_TRUSTED_ORIGINS = [BASE_URL]
 
 INSTALLED_APPS = [
     'django.contrib.admin',
