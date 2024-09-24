@@ -100,15 +100,14 @@ class CustomUserViewSet(viewsets.GenericViewSet):
         detail=False,
         methods=['GET'],
         permission_classes=[IsAuthenticated],
-        pagination_class=PageSizePagination,
-        serializer_class=SubscriptionsSerialiazer
+        pagination_class=PageSizePagination
     )
     def subscriptions(self, request):
         """Получение списка подписок."""
         queryset = User.objects.filter(subscriber__user=request.user)
-        pages = self.paginate_queryset(queryset)
-        serializer = SubscribeSerialiazer(
-            pages, many=True,
+        pagination = self.paginate_queryset(queryset)
+        serializer = SubscriptionsSerialiazer(
+            pagination, many=True,
             context={'request': request}
         )
         return self.get_paginated_response(serializer.data)
