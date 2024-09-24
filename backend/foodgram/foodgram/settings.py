@@ -34,7 +34,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    # 'core.middleware.IPRestrictMiddleware',
 ]
 
 ROOT_URLCONF = 'foodgram.urls'
@@ -69,6 +68,7 @@ DATABASES = {
     }
 }
 
+# Для локальной отладки:
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.sqlite3',

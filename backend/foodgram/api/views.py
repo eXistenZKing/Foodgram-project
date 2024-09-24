@@ -1,7 +1,3 @@
-from core.filtres import IngredientNameFilter, RecipeFilter
-from core.models import CustomUser as User
-from core.pagination import PageSizePagination
-from core.permissions import IsAuthorOrReadOnly
 from django.conf import settings
 from django.db.models import Sum
 from django.http import HttpResponse
@@ -9,7 +5,7 @@ from django.shortcuts import redirect
 from django.views import View
 from recipes.models import (Favorites, Ingredient, Recipe, RecipeIngredients,
                             RecipeShortLink, ShoppingCart, Subscribe, Tag)
-from rest_framework import status, views, viewsets
+from rest_framework import status, viewsets
 from rest_framework.decorators import action
 from rest_framework.generics import get_object_or_404
 from rest_framework.permissions import (AllowAny, IsAuthenticated,
@@ -21,6 +17,10 @@ from .serializers import (CustomUserAvatarSerializer, CustomUserSerializer,
                           RecipeSerializer, ShoppingCartSerializer,
                           SubscribeSerialiazer, SubscriptionsSerialiazer,
                           TagSerializer)
+from core.filtres import IngredientNameFilter, RecipeFilter
+from core.models import CustomUser as User
+from core.pagination import PageSizePagination
+from core.permissions import IsAuthorOrReadOnly
 
 
 class CustomUserViewSet(viewsets.GenericViewSet):
@@ -233,14 +233,3 @@ class RedirectShortLinkView(View):
     def get(self, request, short_hash):
         recipe = get_object_or_404(RecipeShortLink, short_link=short_hash)
         return redirect(f"{settings.BASE_URL}/recipes/{recipe.recipe.id}/")
-
-
-# class GetShortLinkView(views.APIView):
-#     permission_classes = [AllowAny]
-
-#     def get(self, request, pk):
-#         recipe = get_object_or_404(Recipe, id=pk)
-#         recipe, _ = RecipeShortLink.objects.get_or_create(recipe=recipe)
-#         short_link = recipe.get_short_link()
-#         absolute_short_link = f"{settings.BASE_URL}api/s/{short_link}/"
-#         return Response({"get_link": absolute_short_link}, status=200)

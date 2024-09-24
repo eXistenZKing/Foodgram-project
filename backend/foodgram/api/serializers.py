@@ -1,4 +1,3 @@
-from core.models import CustomUser as User
 from django.db import transaction
 from djoser.serializers import UserCreateSerializer
 from recipes.models import (Favorites, Ingredient, Recipe, RecipeIngredients,
@@ -8,6 +7,7 @@ from rest_framework.exceptions import ValidationError
 from rest_framework.validators import UniqueTogetherValidator
 
 from .fields import Base64ImageField
+from core.models import CustomUser as User
 
 
 class CreateUserSerializer(UserCreateSerializer):
