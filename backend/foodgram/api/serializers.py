@@ -287,10 +287,10 @@ class SubscriptionsSerialiazer(serializers.ModelSerializer):
         """Подсчитывает кол-во рецептов для 'recipes_limit'."""
         return Recipe.objects.filter(author=obj).count()
 
-    def get_recipes(self, data):
+    def get_recipes(self, obj):
         """Добавляет в выдачу подписок рецепты избранных авторов."""
         request = self.context.get('request')
-        recipes = data.user.all()
+        recipes = Recipe.objects.filter(author=obj)
         recipes_limit = request.GET.get('recipes_limit')
         if recipes_limit:
             recipes = recipes[:int(recipes_limit)]
