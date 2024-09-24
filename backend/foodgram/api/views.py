@@ -34,7 +34,8 @@ class CustomUserViewSet(viewsets.ModelViewSet):
         detail=True,
         methods=['GET'],
         permission_classes=[IsAuthenticated],
-        url_path='me'
+        url_path='me',
+        pagination_class=None
     )
     def me(self, request):
         """Просмотр собственного профиля."""
@@ -47,7 +48,8 @@ class CustomUserViewSet(viewsets.ModelViewSet):
         methods=['PUT', 'DELETE'],
         permission_classes=[IsAuthenticated],
         url_path='me/avatar',
-        serializer_class=CustomUserAvatarSerializer
+        serializer_class=CustomUserAvatarSerializer,
+        pagination_class=None
     )
     def avatar(self, request):
         """Изменение аватара пользователя."""
