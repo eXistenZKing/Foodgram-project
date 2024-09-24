@@ -19,7 +19,8 @@ from rest_framework.response import Response
 from .serializers import (CustomUserAvatarSerializer, CustomUserSerializer,
                           FavoritesSerializer, IngredientSerializer,
                           RecipeSerializer, ShoppingCartSerializer,
-                          SubscribeSerialiazer, TagSerializer)
+                          SubscribeSerialiazer, SubscriptionsSerialiazer,
+                          TagSerializer)
 
 
 class CustomUserViewSet(viewsets.GenericViewSet):
@@ -99,7 +100,8 @@ class CustomUserViewSet(viewsets.GenericViewSet):
         detail=False,
         methods=['GET'],
         permission_classes=[IsAuthenticated],
-        pagination_class=PageSizePagination
+        pagination_class=PageSizePagination,
+        serializer_class=SubscriptionsSerialiazer
     )
     def subscriptions(self, request):
         """Получение списка подписок."""

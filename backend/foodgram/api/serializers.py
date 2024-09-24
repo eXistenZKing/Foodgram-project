@@ -257,8 +257,8 @@ class FavoritesSerializer(serializers.ModelSerializer):
         ).data
 
 
-class SubscribeSerialiazer(serializers.ModelSerializer):
-    """Сериализатор модели подписки на автора."""
+class SubscriptionsSerialiazer(serializers.ModelSerializer):
+    """Сериализатор для списка подписок."""
     recipes = serializers.SerializerMethodField(read_only=True)
     recipes_count = serializers.SerializerMethodField(read_only=True)
     is_subscribed = serializers.SerializerMethodField()
@@ -298,7 +298,20 @@ class SubscribeSerialiazer(serializers.ModelSerializer):
         serializer = ShortRecipeSerializer(recipes, many=True)
         return serializer.data
 
-    def validate_subscribe(self, validated_data):
+
+class SubscribeSerialiazer(serializers.ModelSerializer):
+    """Сериализатор модели подписки на автора."""
+    class Meta:
+        fields = ['author', 'is_subscribed']
+        model = Subscribe
+        validators = (
+            UniqueTogetherValidator(
+                queryset=Subscribe.objects.all(),
+                fields=['author', 'is_subscribed']
+            ),
+        )
+
+    def validate(self, validated_data):
         author = validated_data['author']
         user = self.context.get('request').user
         if user == author:
@@ -307,6 +320,12 @@ class SubscribeSerialiazer(serializers.ModelSerializer):
             raise serializers.ValidationError(
                 f'Пользователь с username {author} не существует.')
         return validated_data
+
+    def to_representation(self, instance):
+        return SubscriptionsSerialiazer(
+            instance.is_subscribed,
+            context={'request': self.context.get('request')}
+        ).data
 
 
 class ShoppingCartSerializer(serializers.ModelSerializer):
