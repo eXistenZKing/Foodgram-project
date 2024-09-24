@@ -28,6 +28,7 @@ class CustomUserViewSet(viewsets.GenericViewSet):
     queryset = User.objects.all()
     permission_classes = [AllowAny]
     serializer_class = CustomUserSerializer
+    pagination_class = PageSizePagination
 
     @action(
         detail=True,
@@ -42,7 +43,7 @@ class CustomUserViewSet(viewsets.GenericViewSet):
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
     @action(
-        detail=True,
+        detail=False,
         methods=['PUT', 'DELETE'],
         permission_classes=[IsAuthenticated],
         url_path='me/avatar',

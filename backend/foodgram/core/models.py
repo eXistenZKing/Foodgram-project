@@ -1,5 +1,5 @@
 from django.contrib.auth.models import AbstractUser, PermissionsMixin
-from django.core.validators import EmailValidator
+from django.core.validators import EmailValidator, RegexValidator
 from django.db import models
 
 from .constants import CustomUserLimits
@@ -12,6 +12,10 @@ class CustomUser(AbstractUser, PermissionsMixin):
         db_index=True,
         max_length=CustomUserLimits.MAX_LEN_NAME,
         verbose_name='Логин',
+        validators=[RegexValidator(
+            regex=r'^[\w.@+-]+\Z',
+            message='Имя пользователя содержит недопустимые символы.'),
+        ],
     )
     password = models.CharField(
         max_length=255,

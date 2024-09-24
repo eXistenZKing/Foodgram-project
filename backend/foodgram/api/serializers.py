@@ -223,6 +223,15 @@ class RecipeSerializer(serializers.ModelSerializer):
             raise ValidationError('Необходимо добавить хотя '
                                   'бы один ингредиент.')
 
+        checked_tags = set()
+        for tag in tags:
+            if tag['id'] in checked_tags:
+                raise ValidationError('Нельзя использовать повторяющиеся '
+                                      'тэги .')
+            if not Tag.objects.filter(id=tag['id']).exists():
+                raise ValidationError(f'Указан несуществующий тэг - {tag}.')
+            checked_tags.add(tag['id'])
+
         checked_ingredients = set()
         for ingredient in ingredients:
             if int(ingredient['amount']) < 1:
@@ -230,6 +239,9 @@ class RecipeSerializer(serializers.ModelSerializer):
             if ingredient['id'] in checked_ingredients:
                 raise ValidationError('Нельзя использовать два '
                                       'одинаковых ингредиента.')
+            if not Ingredient.objects.filter(id=ingredient['id']).exists():
+                raise ValidationError(f'Указан несуществующий ингредиент '
+                                      f'- {ingredient}.')
             checked_ingredients.add(ingredient['id'])
 
         return data
