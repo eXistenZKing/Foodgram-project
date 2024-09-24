@@ -19,16 +19,16 @@ from .serializers import (CustomUserAvatarSerializer, CustomUserSerializer,
                           TagSerializer)
 from core.filtres import IngredientNameFilter, RecipeFilter
 from core.models import CustomUser as User
-from core.pagination import PageSizePagination
+from core.pagination import PageSizePagination, PageSizeUserPagination
 from core.permissions import IsAuthorOrReadOnly
 
 
-class CustomUserViewSet(viewsets.GenericViewSet):
+class CustomUserViewSet(viewsets.ModelViewSet):
     """Вьюсет для управления пользователями."""
     queryset = User.objects.all()
     permission_classes = [AllowAny]
     serializer_class = CustomUserSerializer
-    pagination_class = PageSizePagination
+    pagination_class = PageSizeUserPagination
 
     @action(
         detail=True,
