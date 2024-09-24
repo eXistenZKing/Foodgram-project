@@ -23,7 +23,7 @@ from core.pagination import PageSizePagination, PageSizeUserPagination
 from core.permissions import IsAuthorOrReadOnly
 
 
-class CustomUserViewSet(viewsets.ModelViewSet):
+class CustomUserViewSet(viewsets.GenericViewSet):
     """Вьюсет для управления пользователями."""
     queryset = User.objects.all()
     permission_classes = [AllowAny]
