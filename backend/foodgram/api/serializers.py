@@ -177,14 +177,6 @@ class RecipeSerializer(serializers.ModelSerializer):
 
     @transaction.atomic
     def update(self, instance, validated_data):
-        # instance.tags.set(instance.tags)
-        # instance.image = validated_data.get('image', instance.image)
-        # instance.ingredients = validated_data.get(self.create_ingredients_list(
-        #     instance.ingredients, instance), instance.ingredients
-        # )
-        # instance.save()
-        # return instance
-
         ingredients = self.context['request'].data.get('ingredients', [])
         tags = self.context['request'].data.get('tags', [])
 
@@ -272,7 +264,7 @@ class SubscribeSerialiazer(serializers.ModelSerializer):
     is_subscribed = serializers.SerializerMethodField()
 
     class Meta:
-        model = User
+        model = Subscribe
         fields = CustomUserSerializer.Meta.fields + [
             'recipes', 'recipes_count'
         ]
