@@ -42,9 +42,17 @@ class CustomUser(AbstractUser, PermissionsMixin):
         default=None,
         verbose_name='Аватар'
     )
+    is_staff = models.BooleanField(
+        "staff status",
+        default=False
+    )
+    is_active = models.BooleanField(
+        "active",
+        default=True
+    )
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = [first_name, last_name, username, email, password]
+    REQUIRED_FIELDS = [email]
 
     class Meta:
         ordering = ('id',)
