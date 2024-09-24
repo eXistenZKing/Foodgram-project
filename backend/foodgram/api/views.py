@@ -19,7 +19,7 @@ from .serializers import (CustomUserAvatarSerializer, CustomUserSerializer,
                           TagSerializer)
 from core.filtres import IngredientNameFilter, RecipeFilter
 from core.models import CustomUser as User
-from core.pagination import PageSizePagination, PageSizeUserPagination
+from core.pagination import PageSizePagination
 from core.permissions import IsAuthorOrReadOnly
 
 
