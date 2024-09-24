@@ -225,12 +225,12 @@ class RecipeSerializer(serializers.ModelSerializer):
 
         checked_tags = set()
         for tag in tags:
-            if tag['id'] in checked_tags:
+            if tag in checked_tags:
                 raise ValidationError('Нельзя использовать повторяющиеся '
                                       'тэги .')
-            if not Tag.objects.filter(id=tag['id']).exists():
+            if not Tag.objects.filter(id=tag).exists():
                 raise ValidationError(f'Указан несуществующий тэг - {tag}.')
-            checked_tags.add(tag['id'])
+            checked_tags.add(tag)
 
         checked_ingredients = set()
         for ingredient in ingredients:
