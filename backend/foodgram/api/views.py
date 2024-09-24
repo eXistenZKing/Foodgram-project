@@ -104,7 +104,7 @@ class CustomUserViewSet(viewsets.GenericViewSet):
     )
     def subscriptions(self, request):
         """Получение списка подписок."""
-        queryset = User.objects.filter(subscriber__user=request.user)
+        queryset = User.objects.filter(subscriptions__user=request.user)
         pagination = self.paginate_queryset(queryset)
         serializer = SubscriptionsSerialiazer(
             pagination, many=True,
