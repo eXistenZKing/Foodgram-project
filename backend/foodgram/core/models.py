@@ -33,7 +33,7 @@ class CustomUser(AbstractUser, PermissionsMixin):
         unique=True,
         max_length=CustomUserLimits.MAX_LEN_EMAIL,
         verbose_name='Электронная почта',
-        validators=[EmailValidator,]
+        validators=[EmailValidator]
     )
     avatar = models.ImageField(
         upload_to='users/images/',
