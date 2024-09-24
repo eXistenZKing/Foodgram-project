@@ -321,11 +321,11 @@ class SubscribeSerialiazer(serializers.ModelSerializer):
                 f'Пользователь с username {author} не существует.')
         return validated_data
 
-    def to_representation(self, instance):
-        return SubscriptionsSerialiazer(
-            instance.author,
-            context={'request': self.context.get('request')}
-        ).data
+    # def to_representation(self, instance):
+    #     return SubscriptionsSerialiazer(
+    #         instance.author,
+    #         context={'request': self.context.get('request')}
+    #     ).data
 
 
 class ShoppingCartSerializer(serializers.ModelSerializer):
