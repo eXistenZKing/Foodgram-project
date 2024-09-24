@@ -323,7 +323,7 @@ class SubscribeSerialiazer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         return SubscriptionsSerialiazer(
-            instance.is_subscribed,
+            instance.author,
             context={'request': self.context.get('request')}
         ).data
 
