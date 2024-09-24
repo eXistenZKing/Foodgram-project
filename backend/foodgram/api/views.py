@@ -23,7 +23,7 @@ from core.pagination import PageSizePagination
 from core.permissions import IsAuthorOrReadOnly
 
 
-class CustomUserViewSet(viewsets.ModelViewSet):
+class CustomUserViewSet(viewsets.GenericViewSet):
     """Вьюсет для управления пользователями."""
     queryset = User.objects.all()
     permission_classes = [AllowAny]
@@ -35,7 +35,6 @@ class CustomUserViewSet(viewsets.ModelViewSet):
         methods=['GET'],
         permission_classes=[IsAuthenticated],
         url_path='me',
-        pagination_class=None
     )
     def me(self, request):
         """Просмотр собственного профиля."""
@@ -49,7 +48,6 @@ class CustomUserViewSet(viewsets.ModelViewSet):
         permission_classes=[IsAuthenticated],
         url_path='me/avatar',
         serializer_class=CustomUserAvatarSerializer,
-        pagination_class=None
     )
     def avatar(self, request):
         """Изменение аватара пользователя."""

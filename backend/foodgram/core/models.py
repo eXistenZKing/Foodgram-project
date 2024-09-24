@@ -44,7 +44,7 @@ class CustomUser(AbstractUser, PermissionsMixin):
     )
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = []
+    REQUIRED_FIELDS = [first_name, last_name, username, email, password]
 
     class Meta:
         ordering = ('id',)
