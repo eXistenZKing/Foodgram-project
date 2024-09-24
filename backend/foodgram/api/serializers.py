@@ -294,7 +294,10 @@ class SubscriptionsSerialiazer(serializers.ModelSerializer):
         recipes_limit = request.GET.get('recipes_limit')
 
         if recipes_limit:
-            recipes = recipes[:int(recipes_limit)]
+            recipes = recipes[
+                :int(
+                    recipes_limit)
+            ]
         serializer = ShortRecipeSerializer(recipes, many=True)
         return serializer.data
 
