@@ -264,7 +264,7 @@ class SubscriptionsSerialiazer(serializers.ModelSerializer):
     is_subscribed = serializers.SerializerMethodField()
 
     class Meta:
-        model = Subscribe
+        model = User
         fields = CustomUserSerializer.Meta.fields + [
             'recipes', 'recipes_count'
         ]
@@ -302,12 +302,12 @@ class SubscriptionsSerialiazer(serializers.ModelSerializer):
 class SubscribeSerialiazer(serializers.ModelSerializer):
     """Сериализатор модели подписки на автора."""
     class Meta:
-        fields = ['author', 'is_subscribed']
+        fields = ['user', 'author']
         model = Subscribe
         validators = (
             UniqueTogetherValidator(
                 queryset=Subscribe.objects.all(),
-                fields=['author', 'is_subscribed']
+                fields=['user', 'author']
             ),
         )
 
