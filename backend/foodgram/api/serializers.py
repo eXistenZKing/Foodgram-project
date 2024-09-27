@@ -51,9 +51,8 @@ class CustomUserSerializer(serializers.ModelSerializer):
     def get_is_subscribed(self, obj):
         """Проверка наличия подписки на просматриваемого пользователя"""
         user = self.context['request'].user
-        return user.subscriber.filter(
-            author=obj
-        ).exists() and user.is_authenticated
+        return False if user.is_anonymous else user.subscriber.filter(
+            author=obj).exists() and user.is_authenticated
 
 
 class CustomUserAvatarSerializer(CustomUserSerializer):
