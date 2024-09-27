@@ -62,7 +62,7 @@
       BASE_URL=https://example.com
 
       ```
-2. В настройках Django приложения `setting.py` закоментировать настройки для БД на основе PostgreSQL и раскоментировать настройки для SQLite, при необходимости. Или закоментировать в docker compose контейнер с db.
-3. Находясь в папке `infra` выполните команду `docker compose up`.
-4. По адресу http://localhost будет доступен проект, а по адресу http://localhost/api/docs/ — спецификацию API.
-
+2.  В настройках Django приложения `setting.py` в качестве базы данных стоит PostgreSQL. При необходмости изменить на SQLite, закоментировать настройки для БД на основе PostgreSQL и раскоментировать настройки для SQLite. А также закоментировать в `/infra/docker-compose.yml` контейнер с db.
+3. При необходимости, поменять порт в Dockerfile'ах и конфигурации nginx.
+4. Находясь в папке `infra` выполните команду `docker compose up`.
+5. По адресу http://localhost:7000 будет доступен проект, а по адресу http://localhost:7000/api/docs/ — спецификацию API.
