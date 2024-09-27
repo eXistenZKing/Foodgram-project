@@ -7,8 +7,8 @@ SECRET_KEY = os.getenv('SECRET_KEY', '')
 
 DEBUG = os.getenv('DEBUG', False)
 
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split()
-BASE_URL = os.getenv('BASE_URL', '')
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'http://127.0.0.1:7000').split()
+BASE_URL = os.getenv('BASE_URL', 'http://127.0.0.1:7000')
 CSRF_TRUSTED_ORIGINS = [BASE_URL]
 
 INSTALLED_APPS = [
@@ -69,7 +69,7 @@ DATABASES = {
     }
 }
 
-# # Для локальной отладки:
+# Для локальной отладки / создания миграций перед деплоем на сервер:
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.sqlite3',
