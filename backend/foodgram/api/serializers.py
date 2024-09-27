@@ -53,7 +53,7 @@ class CustomUserSerializer(serializers.ModelSerializer):
         user = self.context['request'].user
         return user.subscriber.filter(
             author=obj
-        ).exists() if user.is_authenticated else False
+        ).exists() and user.is_authenticated
 
 
 class CustomUserAvatarSerializer(CustomUserSerializer):
@@ -92,24 +92,6 @@ class RecipeIngredientsSerializer(serializers.ModelSerializer):
     class Meta:
         model = RecipeIngredients
         fields = ['id', 'name', 'amount', 'measurement_unit']
-
-
-# class AmountIngredientsSerializer(serializers.ModelSerializer):
-#     """Сериализатор количества ингредиента."""
-#     id = serializers.PrimaryKeyRelatedField(
-# queryset=Ingredient.objects.all())
-#     amount = serializers.IntegerField()
-
-#     class Meta:
-#         model = RecipeIngredients
-#         fields = ("id", "amount")
-
-#     def validate(self, data):
-#         if data['amount'] < 1:
-#             raise serializers.ValidationError(
-#                 'Мин. количество ингредиента 1 у.е.'
-#             )
-#         return data
 
 
 class RecipeSerializer(serializers.ModelSerializer):

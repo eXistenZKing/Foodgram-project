@@ -2,8 +2,7 @@ import json
 import os
 
 from django.conf import settings
-from django.core.management.base import BaseCommand, CommandError
-from django.db.utils import IntegrityError
+from django.core.management.base import BaseCommand
 from recipes.models import Ingredient
 
 DATA_ROOT = os.path.join(settings.BASE_DIR, 'data')
@@ -17,19 +16,28 @@ class Command(BaseCommand):
                             type=str)
 
     def handle(self, *args, **options):
-        try:
-            with open(os.path.join(DATA_ROOT, options['filename']), 'r',
-                      encoding='utf-8') as f:
-                data = json.load(f)
-                for ingredient in data:
-                    try:
-                        Ingredient.objects.create(name=ingredient["name"],
-                                                  measurement_unit=ingredient[
-                                                      "measurement_unit"])
-                    except IntegrityError:
-                        print(f'Ингридиет {ingredient["name"]} '
-                              f'{ingredient["measurement_unit"]} '
-                              f'уже есть в базе')
+        path_to_data = os.path.join(DATA_ROOT, options['filename'])
 
+        try:
+            with open(path_to_data, 'r', encoding='utf-8') as f:
+                data = json.load(f)
+                Ingredient.objects.bulk_create(
+                    [
+                        Ingredient(
+                            name=ingredient['name'],
+                            measurement_unit=ingredient[
+                                "measurement_unit"]
+                        )
+                        for ingredient in data
+                    ], ignore_conflicts=True
+                )
         except FileNotFoundError:
-            raise CommandError('Файл отсутствует в директории data')
+            return (self.stdout.write(
+                self.style.ERROR(f'Файл {path_to_data} отсутствует.')))
+        except Exception:
+            raise Exception(self.stdout.write(self.style.ERROR(
+                'Произошла ошибка при загрузке ингредиентов в БД:')))
+
+        self.stdout.write(
+            self.style.SUCCESS('Список ингредиентов успешно загружен в БД.')
+        )

@@ -58,11 +58,11 @@
       POSTGRES_DB=foodgram
       DB_HOST=db
       DB_PORT=5432
-      ALLOWED_HOSTS=158.160.13.17 example.com 127.0.0.1 localhost
+      ALLOWED_HOSTS=example.com 127.0.0.1 localhost
       BASE_URL=https://example.com
 
       ```
-2. В настройках Django приложения `setting.py` закоментировать настройки для БД на основе PostgreSQL и раскоментировать настройки для SQLite
-3. Находясь в папке `infra` выполните команду `docker compose up`
+2. В настройках Django приложения `setting.py` закоментировать настройки для БД на основе PostgreSQL и раскоментировать настройки для SQLite, при необходимости. Или закоментировать в docker compose контейнер с db.
+3. Находясь в папке `infra` выполните команду `docker compose up`.
 4. По адресу http://localhost будет доступен проект, а по адресу http://localhost/api/docs/ — спецификацию API.
 

@@ -18,7 +18,7 @@ class CustomUser(AbstractUser, PermissionsMixin):
         ],
     )
     password = models.CharField(
-        max_length=255,
+        max_length=CustomUserLimits.MAX_LEN_PASS,
         verbose_name='Пароль',
     )
     first_name = models.CharField(
@@ -55,7 +55,7 @@ class CustomUser(AbstractUser, PermissionsMixin):
     REQUIRED_FIELDS = [email]
 
     class Meta:
-        ordering = ('id',)
+        ordering = ('email',)
         verbose_name = 'пользователь'
         verbose_name_plural = 'Пользователи'
 

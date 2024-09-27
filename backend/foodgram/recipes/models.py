@@ -11,16 +11,23 @@ class Ingredient(models.Model):
     """Модель ингридиента."""
     name = models.CharField(
         max_length=RecipesLimits.MAX_LEN_INGREDIENT_NAME,
-        verbose_name='Название'
+        verbose_name='Название',
+        unique=True
     )
     measurement_unit = models.CharField(
         max_length=RecipesLimits.MAX_LEN_MEASURE_UNIT,
-        verbose_name='Единицы измерения'
+        verbose_name='Единицы измерения',
     )
 
     class Meta:
         verbose_name = 'ингридиент'
         verbose_name_plural = 'Ингридиенты'
+        constraints = [
+            models.UniqueConstraint(
+                fields=('name', 'measurement_unit'),
+                name='unique ingredients'
+            )
+        ]
 
     def __str__(self):
         return self.name
@@ -82,9 +89,10 @@ class Recipe(models.Model):
                 message='Мин. время приготовления 1 минута'),
         ]
     )
-    pub_date = models.DateTimeField('Дата публикации', auto_now_add=True)
+    pub_date = models.DateTimeField('Дата публикации', auto_now_add=True,
+                                    db_index=True)
 
-    class Meta:
+    class Meta: 
         verbose_name = 'рецепт'
         verbose_name_plural = 'Рецепты'
         ordering = ('-pub_date',)
@@ -152,7 +160,11 @@ class Subscribe(models.Model):
         constraints = [
             models.UniqueConstraint(
                 fields=('user', 'author'),
-                name='preventing self-subscription'
+                name='unique subscription'
+            ),
+            models.CheckConstraint(
+                check=~models.Q(author=models.F('user')),
+                name='restriction self subscription'
             )
         ]
 

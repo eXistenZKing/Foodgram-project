@@ -8,7 +8,7 @@ SECRET_KEY = os.getenv('SECRET_KEY', '')
 DEBUG = os.getenv('DEBUG', False)
 
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split()
-BASE_URL = os.getenv("BASE_URL", "http://127.0.0.1:7000")
+BASE_URL = os.getenv('BASE_URL', '')
 CSRF_TRUSTED_ORIGINS = [BASE_URL]
 
 INSTALLED_APPS = [
@@ -69,7 +69,7 @@ DATABASES = {
     }
 }
 
-# Для локальной отладки:
+# # Для локальной отладки:
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.sqlite3',
@@ -128,7 +128,9 @@ REST_FRAMEWORK = {
     'DEFAULT_THROTTLE_RATES': {
         'anon': '1000/day',
         'user': '7000/day'
-    }
+    },
+    'PAGE_SIZE': 6,
+    'DEFAULT_PAGINATION_CLASS': 'core.pagination.PageSizePagination',
 }
 
 DJOSER = {

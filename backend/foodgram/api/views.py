@@ -5,8 +5,8 @@ from django.shortcuts import redirect
 from django.views import View
 from recipes.models import (Favorites, Ingredient, Recipe, RecipeIngredients,
                             RecipeShortLink, ShoppingCart, Subscribe, Tag)
-from rest_framework import status, viewsets
-from rest_framework.decorators import action
+from rest_framework import status, views, viewsets
+from rest_framework.decorators import action, api_view, permission_classes
 from rest_framework.generics import get_object_or_404
 from rest_framework.permissions import (AllowAny, IsAuthenticated,
                                         IsAuthenticatedOrReadOnly)
@@ -145,7 +145,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
     def shopping_cart(self, request, pk=None):
         """Управление списком покупок."""
         recipe = get_object_or_404(Recipe, id=pk)
-        user = get_object_or_404(User, id=request.user.id)
+        user = request.user
         shopping_cart = ShoppingCart.objects.filter(
             user=user.id,
             recipe=recipe
@@ -170,7 +170,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
     def favorite(self, request, pk=None):
         """Управление списком избранного."""
         recipe = get_object_or_404(Recipe, id=pk)
-        user = get_object_or_404(User, id=request.user.id)
+        user = request.user
         favorites = Favorites.objects.filter(
             user=user.id,
             recipe=recipe
@@ -187,50 +187,44 @@ class RecipeViewSet(viewsets.ModelViewSet):
             return Response(status=status.HTTP_204_NO_CONTENT)
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
-    @action(
-        detail=False,
-        methods=['GET'],
-        pagination_class=None,
-        permission_classes=[IsAuthenticated]
-    )
-    def download_shopping_cart(self, request):
-        """Скачивание корзины покупок."""
-        user = request.user
-        list_recipes = (
-            RecipeIngredients.objects.filter(
-                recipe__shopping_cart__user=user)
-            .values('ingredient__name', 'ingredient__measurement_unit')
-            .annotate(amount=Sum('amount'))
-        )
-        filename = 'ingredients shopping list.txt'
-        content = "\n".join(
-            [
-                f'{ingredient["ingredient__name"]} -'
-                f' {ingredient["amount"]}'
-                f' {ingredient["ingredient__measurement_unit"]}'
-                for ingredient in list_recipes
-            ]
-        )
-        response = HttpResponse(content, content_type='text/plain')
-        response['Content-Disposition'] = f'attachment; filename={filename}'
-        return response
 
-    @action(
-        detail=True,
-        methods=['GET'],
-        permission_classes=[AllowAny],
-        url_path='get-link'
-
+@permission_classes(IsAuthenticated)
+@api_view(['GET'])
+def download_shopping_cart(request):
+    """Скачивание корзины покупок."""
+    user = request.user
+    list_recipes = (
+        RecipeIngredients.objects.filter(
+            recipe__shopping_cart__user=user.id)
+        .values('ingredient__name', 'ingredient__measurement_unit')
+        .annotate(amount=Sum('amount'))
     )
-    def get_link(self, request, pk=None):
-        recipe = get_object_or_404(Recipe, id=pk)
-        recipe, _ = RecipeShortLink.objects.get_or_create(recipe=recipe)
-        short_link = recipe.get_short_link()
-        absolute_short_link = f"{settings.BASE_URL}/api/s/{short_link}/"
-        return Response({"short-link": absolute_short_link}, status=200)
+    filename = 'ingredients shopping list.txt'
+    content = "\n".join(
+        [
+            f'{ingredient["ingredient__name"]} -'
+            f' {ingredient["amount"]}'
+            f' {ingredient["ingredient__measurement_unit"]}'
+            for ingredient in list_recipes
+        ]
+    )
+    response = HttpResponse(content, content_type='text/plain')
+    response['Content-Disposition'] = f'attachment; filename={filename}'
+    return response
 
 
 class RedirectShortLinkView(View):
     def get(self, request, short_hash):
         recipe = get_object_or_404(RecipeShortLink, short_link=short_hash)
         return redirect(f"{settings.BASE_URL}/recipes/{recipe.recipe.id}/")
+
+
+class GetShortLinkView(views.APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request, pk):
+        recipe = get_object_or_404(Recipe, id=pk)
+        recipe, _ = RecipeShortLink.objects.get_or_create(recipe=recipe)
+        short_link = recipe.get_short_link()
+        absolute_short_link = f"{settings.BASE_URL}api/s/{short_link}/"
+        return Response({"get_link": absolute_short_link}, status=200)
